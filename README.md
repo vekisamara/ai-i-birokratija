@@ -5,7 +5,6 @@ Dobrodošli u zvanični repozitorijum sa otvorenim materijalima, strukturisanim 
 Ovaj prostor je kreiran s ciljem da građanima, aktivistima, novinarima i organizacijama civilnog društva obezbijedi gotove tehničke i metodološke alate za primjenu **građanske forenzike** u svakodnevnom nadzoru rada javnih institucija.
 
 🔗 **Glavni portal projekta:** [gradjanskaforenzika.org](https://gradjanskaforenzika.org)
-📖 **Radionički materijali i podrška:** [restartsrpska.org](https://restartsrpska.org)
 
 ---
 
