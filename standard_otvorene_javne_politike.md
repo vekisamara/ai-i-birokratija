@@ -31,4 +31,4 @@ Svaka studija slučaja i analiza unutar ovog projekta mora ispunjavati sljedeći
 * **Fokus na instituciju:** Predmet analize je isključivo zakonitost postupanja organa vlasti i zaštita javnog interesa, a ne privatni život pojedinaca obuhvaćenih postupkom.
 
 ---
-🔗 **Zvanična dokumentacija:** [Standard otvorene javne politike na gradjanskaforenzika.org](https://
+🔗 **Zvanična dokumentacija:** [Standard otvorene javne politike na gradjanskaforenzika.org]([https://](https://gradjanskaforenzika.org/standard-otvorene-javne-politike/)
