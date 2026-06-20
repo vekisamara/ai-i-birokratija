@@ -22,8 +22,8 @@ Ovaj repozitorijum vjerno prati cjeline priručnika i organizovan je na sljedeć
 
 * 📑 `01_uvod_i_metodologija/` — Osnovni pojmovi o AI pismenosti kao građanskoj vještini i vizuelni algoritam građanske forenzike.
 * 🤖 `02_osnovni_prompt_paket/` — Gotovi, strukturisani "prompt skeletoni" (System, Context, Task, Style, Input) za terenski rad.
-* ⚖️ `03_pandorina_kutija/` — Studije slučaja zasnovane na stvarnim upravnim aktima (analiza rješenja, povrede postupka i administrativni formalizam).
-* 🛠️ `04_prakticni_vodic/` — Kontrolne liste, algoritmi poslušnosti u modernoj birokratiji i uputstva za postupanje pred Ombudsmanom i sudovima.
+* ⚖️ `03_alati/` — softverski alati
+
 
 ---
 
