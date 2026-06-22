@@ -16,7 +16,7 @@ Situacija kada organ ne odgovori na zahtjev, žalbu, predstavku, inicijativu ili
 
 ## Urgencija
 
-Požurnica kojom se organ podsjeća da nije postupio ili odgovorio u roku. Dobra urgencija navodi datum ranijeg podneska, predmet, protek roka, šta se traži i koji će se dalji koraci razmotriti ako organ nastavi da ćuti.
+Urgencija kojom se organ podsjeća da nije postupio ili odgovorio u roku. Dobra urgencija navodi datum ranijeg podneska, predmet, protek roka, šta se traži i koji će se dalji koraci razmotriti ako organ nastavi da ćuti.
 
 ## Upravni akt
 
