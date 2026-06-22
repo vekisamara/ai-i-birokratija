@@ -1,23 +1,6 @@
 # Alati za građansku forenziku
 
-Folder `alati/` sadrži lokalne softverske alate za tehničku provjeru dokumenata. Osnovno pravilo je da se osjetljivi dokumenti prvo obrađuju lokalno, prije bilo kakvog slanja prema vanjskim servisima ili AI modelima.
-
-## Trenutni alat
-
-### `forenzika_pdf.py`
-
-Python skripta za ekstrakciju PDF metapodataka. Alat čita PDF dokument i prikazuje:
-
-- naziv fajla,
-- broj stranica,
-- autora dokumenta,
-- aplikaciju kojom je dokument kreiran,
-- softver koji je proizveo PDF,
-- datum kreiranja,
-- datum izmjene,
-- dodatne skrivene PDF tagove.
-
-Ovaj alat je koristan kada se želi provjeriti digitalni trag dokumenta, posebno kod javnih akata, rješenja, dopisa i odgovora organa vlasti.
+Folder `alati/` sadrži lokalne softverske alate za tehničku provjeru dokumenata, evidenciju dokaza, praćenje rokova i pripremu podataka za budući Civic Intelligence Dashboard. Osnovno pravilo je da se osjetljivi dokumenti prvo obrađuju lokalno, prije bilo kakvog slanja prema vanjskim servisima ili AI modelima.
 
 ## Instalacija
 
@@ -27,7 +10,7 @@ source .venv/bin/activate
 pip install pypdf
 ```
 
-Na Windows sistemu aktivacija virtualnog okruženja može izgledati ovako:
+Na Windows sistemu:
 
 ```powershell
 python -m venv .venv
@@ -35,34 +18,116 @@ python -m venv .venv
 pip install pypdf
 ```
 
-## Pokretanje
+`pypdf` je potreban za PDF alate. Ostali alati koriste standardnu Python biblioteku.
+
+## Dostupni alati
+
+### `forenzika_pdf.py`
+
+Interaktivna analiza jednog PDF dokumenta. Izvlači autora, aplikaciju, producer softver, datum kreiranja, datum izmjene, broj stranica i dodatne skrivene tagove.
 
 ```bash
 python forenzika_pdf.py
 ```
 
-Nakon pokretanja unesite putanju do PDF dokumenta.
+### `pdf_batch_metadata.py`
+
+Batch analiza svih PDF dokumenata u folderu. Pravi CSV i opcioni JSON izvještaj.
+
+```bash
+python pdf_batch_metadata.py dokazi/ --recursive --csv pdf_metadata_report.csv --json pdf_metadata_report.json
+```
+
+### `hash_dokaza.py`
+
+Izračun SHA-256 hash vrijednosti za jedan ili više fajlova/foldera.
+
+```bash
+python hash_dokaza.py dokazi/ --recursive --csv hash_report.csv --json hash_report.json
+```
+
+### `metadata_risk_score.py`
+
+Dodaje indikator za dodatnu provjeru na osnovu CSV izvještaja iz `pdf_batch_metadata.py`. Ovaj alat ne utvrđuje nezakonitost; samo označava metapodatkovne signale koje treba ručno provjeriti.
+
+```bash
+python metadata_risk_score.py pdf_metadata_report.csv --output metadata_risk_report.csv
+```
+
+### `anonimizator_teksta.py`
+
+Osnovna lokalna anonimizacija TXT/MD fajlova. Prepoznaje neke česte obrasce: JMBG, email, telefon i brojeve ličnih dokumenata. Rezultat uvijek treba ručno pregledati.
+
+```bash
+python anonimizator_teksta.py dokument.txt --output dokument_anonimizovan.txt
+```
+
+### `rokovi_kalkulator.py`
+
+Kalkulator rokova od datuma podnošenja.
+
+```bash
+python rokovi_kalkulator.py --datum 2026-05-13 --rok 30
+```
+
+### `foi_tracker.py`
+
+Lokalni CSV tracker FOI zahtjeva i statusa.
+
+```bash
+python foi_tracker.py add --datum 2026-05-13 --rok 30 --organ "Grad Banja Luka" --predmet "Šaht"
+python foi_tracker.py status
+python foi_tracker.py update --id ABC123 --status odgovoreno
+```
+
+### `evidencioni_dnevnik.py`
+
+CSV dnevnik dokaza u predmetu. Može automatski izračunati hash fajla.
+
+```bash
+python evidencioni_dnevnik.py add --case-id ATA-1-2026 --file rjesenje.pdf --institution "Grad Banja Luka" --document-number "05-370-4373/25" --document-date 2025-09-09 --source "FOI odgovor"
+python evidencioni_dnevnik.py list --case-id ATA-1-2026
+```
+
+### `timeline_builder.py`
+
+Generiše Markdown hronologiju iz CSV evidencije.
+
+```bash
+python timeline_builder.py evidencija_dokaza.csv --output hronologija.md
+```
+
+### `case_json_builder.py`
+
+Pravi osnovni `case.json` za dashboard-ready predmet.
+
+```bash
+python case_json_builder.py --case-id sime-solaje-1b-2026 --title "Sime Šolaje 1b" --institution "Komunalna policija" --issue-type cutanje_uprave --public-interest "zaštita stanara" --risk-level high --output case.json
+```
+
+### `markdown_case_report.py`
+
+Generiše Markdown studiju slučaja iz `case.json` i opcione CSV evidencije.
+
+```bash
+python markdown_case_report.py case.json --evidence-csv evidencija_dokaza.csv --output case_report.md
+```
+
+## Preporučeni workflow
+
+1. Dokumente staviti u lokalni folder `dokazi/`.
+2. Pokrenuti `hash_dokaza.py` radi dokaznog integriteta.
+3. Pokrenuti `pdf_batch_metadata.py` radi digitalnog traga PDF dokumenata.
+4. Pokrenuti `metadata_risk_score.py` radi indikatora za dodatnu provjeru.
+5. Voditi predmet kroz `evidencioni_dnevnik.py` i `foi_tracker.py`.
+6. Generisati hronologiju pomoću `timeline_builder.py`.
+7. Kreirati `case.json` pomoću `case_json_builder.py`.
+8. Napraviti javni Markdown nacrt pomoću `markdown_case_report.py`.
 
 ## Pravila tumačenja
 
-Metapodaci nisu sami po sebi dokaz nezakonitosti. Oni su digitalni trag koji može otvoriti dodatna pitanja:
-
-- Da li se autor računara razlikuje od potpisnika akta?
-- Da li je dokument nastao u neočekivanoj aplikaciji ili kod trećeg lica?
-- Da li je datum izmjene neobičan u odnosu na datum akta?
-- Da li je dokument očišćen od metapodataka?
-
-Nalaz iz alata treba kombinovati sa sadržajem akta, brojem protokola, potpisom, pečatom, pravnim osnovom i službenom prepiskom.
+Metapodaci, hash vrijednosti i lokalni izvještaji nisu sami po sebi dokaz nezakonitosti. Oni su dokazni tragovi i indikatori za dodatnu provjeru. Nalaze treba kombinovati sa sadržajem akta, brojem protokola, potpisom, pečatom, pravnim osnovom, rokovima i službenom prepiskom.
 
 ## Privatnost
 
-Ne objavljujte neobrađene dokumente koji sadrže JMBG, broj lične karte, privatnu adresu, privatni telefon, medicinske podatke ili podatke o maloljetnicima. Prije javnog objavljivanja dokumente treba anonimizovati.
-
-## Planirana unapređenja
-
-- export nalaza u JSON,
-- export nalaza u CSV,
-- batch obrada više PDF fajlova,
-- izračun SHA-256 hash vrijednosti dokumenta,
-- osnovni izvještaj za prilaganje uz FOI, žalbu ili javnu studiju slučaja,
-- lokalni alat za anonimizaciju osjetljivih podataka.
+Ne objavljujte neobrađene dokumente koji sadrže JMBG, broj lične karte, privatnu adresu, privatni telefon, medicinske podatke ili podatke o maloljetnicima. Prije javnog objavljivanja dokumente treba anonimizovati i ručno pregledati.
